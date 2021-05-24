@@ -90,26 +90,41 @@ def getCADconverterParameterListJSON(channelPath):
 
 # Source: nTopology, which claims source: www.matweb.com
 CB_MATERIAL = {
-    "IN718" : {
-        "YoungsModulus": {"value" : 205000000000, "units" : "Pa"},
-        "PoissonsRatio" : 0.284,
+    "IN718" : {     # nTopology default material property
+        "youngsModulus": {"values" : 205000000000, "units" : "Pa"},
+        "poissonsRatio" : 0.284,
         "density": {"value" : 8.19, "units" : "g/cm^3"}
     },
-    "316L-0410" : {
-        "YoungsModulus": {"value" : 193000000000, "units" : "Pa"},
-        "PoissonsRatio" : 0.28,
+    "316L-0410" : {     # nTopology default material property
+        "youngsModulus": {"values" : 193000000000, "units" : "Pa"},
+        "poissonsRatio" : 0.28,
         "density": {"value" : 8.0, "units" : "g/cm^3"}
     },
-    "MaragingSteel" : {
-        "YoungsModulus": {"value" : 123123, "units" : "Pa"},
-        "PoissonsRatio" : 123123,
+    "MaragingSteel" : {     # no any clue what parameters should be here
+        "youngsModulus": {"values" : 123123, "units" : "Pa"},
+        "poissonsRatio" : 123123,
         "density": {"value" : 123123, "units" : "g/cm^3"}
     }
 }
 
 # Converts map to nTopology JSON input suitable format
-def getMaterialParameterListJSON():
-
+def getMaterialParameterJSON(materialKey):
+    youngsModulus = {
+        "name" : "youngs_modulus",
+        "type" : "scalar",
+        "values": CB_MATERIAL[materialKey]["youngsModulus"]
+    }
+    poissonsRatio = {
+        "name" : "poissons_ratio",
+        "type" : "scalar",
+        "values" : CB_MATERIAL[materialKey]["poissonsRatio"]
+    }
+    density = {
+        "name" : "density",
+        "type" : "scalar",
+        "values" : CB_MATERIAL[materialKey]["density"]
+    }
+    return [youngsModulus, poissonsRatio, density]
 
 # --------------------------------------------------------------------------------
 #                      2. Topology optimization CB (TO_CB)
@@ -148,13 +163,14 @@ def createChannelFolder(channel_id):
 # Converts map to nTopology JSON input suitable format
 # Return:  list of maps [{<name>, <type>, <value>}, ...]
 def getTopOptParameterListJSON(channel_id, material_id):
-    CB_TOP_OPT_PARAMS = {
-     # Each channel_id into own subfolder
-    "Path_mesh_export_dir" : createChannelFolder(channel_id),
-    "basename" : ENVIRONMENT.CB_TOP_OPT_PARAMS["basename"],
-    "channel_id" : ENVIRONMENT.CB_TOP_OPT_PARAMS["channel_id"],
-    "material_id" : material_id
+    cbTopOptParamsMap = {
+        # Each channel_id into own subfolder
+        "Path_mesh_export_dir" : createChannelFolder(channel_id),
+        "basename" : ENVIRONMENT.CB_TOP_OPT_PARAMS["basename"],
+        "channel_id" : ENVIRONMENT.CB_TOP_OPT_PARAMS["channel_id"],
+        "material_id" : material_id
     }
+    return cbTopOptParamsMap
 
 # --------------------------------------------------------------------------------
 #               3. FE Validation, Static Structural (CB_FEA_exporter)
