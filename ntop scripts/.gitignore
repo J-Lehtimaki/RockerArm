@@ -2,5 +2,8 @@
 
 **/env.py
 **/ENVIRONMENT.py
+**/env*.py
+**/ENV*.py
+
 **/AUTH.py
 

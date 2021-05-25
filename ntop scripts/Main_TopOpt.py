@@ -12,7 +12,7 @@ from pathlib import Path
 from multiprocessing import Process, Lock
 import ENVIRONMENT
 from SharedResourceManager import SharedResourceManager
-from colors import Style
+import colors
 from nTopCall3 import TopologyCaller
 
 
@@ -21,7 +21,7 @@ PROCESS_COUNT = ENVIRONMENT.PROCESS_COUNT   # Change this according to your pref
 def printWelcomeMessage():
     os.system("")   # Enable colors in terminal for monitoring
     print('{s}This is main test for multiprocessing{e}'
-        .format(s=Style.CYAN, e=Style.RESET))
+        .format(s=colors.CYAN, e=colors.RESET))
 
 #   Returns list of .stp files in the argument folder and it's subfolders
 def folderContentStep(dir):
@@ -58,11 +58,11 @@ def handleFileList(fileSet, topCaller):
             topCaller.subProcessRockerArm( inputLO, output, iJson, oJson)
 
 def colorPrint(processID, msg):
-    colorsID = [Style.GREEN, Style.YELLOW, Style.RED, Style.MAGENTA]
-    startC = Style.UNDERLINE
+    colorsID = [colors.GREEN, colors.YELLOW, colors.RED, colors.MAGENTA]
+    startC = colors.UNDERLINE
     if(processID < len(colorsID)):
         startC = colorsID[processID]
-    print('{s}T{id}: {message}{e}'.format(s=startC, id=processID, message=msg, e=Style.RESET))
+    print('{s}T{id}: {message}{e}'.format(s=startC, id=processID, message=msg, e=colors.RESET))
 
 
 def main():
@@ -86,7 +86,7 @@ def main():
 
     # TODO: Save time spent in the output
     print('{s}Main took {t} seconds to complete.{e}'.
-        format(s=Style.CYAN, t=finishTime-startTime, e=Style.RESET))
+        format(s=colors.CYAN, t=finishTime-startTime, e=colors.RESET))
 
 if __name__ == '__main__':
     main()
