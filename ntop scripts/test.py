@@ -7,7 +7,7 @@ import os
 channel_id = "myChannelID"
 material_id = "316L-0410"
 pathToMyChannel = "----pathToMyChannel----"
-materials = ["IN718", "316L-0410", "MaragingSteel"]
+materials = ["IN718", "316L"]
 ch_paths = [
     "C:\\some\\fake\\path\\1.stp",
     "C:\\some\\fake\\path\\22.stp",
@@ -65,17 +65,13 @@ def three():
 
 # Parsing ID number from channel path, returing tuple
 def four():
-
     retVal = []
-    # 1. Split the path from slashes
     for p in ch_paths:
         path = p
         id = p.split('\\')[-1].split('.')[0]
         retVal.append({"p":path,"channel_id":id})
-    # 2. Extract last
-
     for pair in retVal:
-        s = f'Path is: {pair["p"]} /*        */ Channel ID is: {pair["channel_id"]}'
+        s = f'Path is: {pair["p"]} /**/ Channel ID is: {pair["channel_id"]}'
         print(s)
 
 if(sys.argv[1] == str(1)): one()

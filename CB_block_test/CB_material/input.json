@@ -1,0 +1,21 @@
+{
+    "inputs": [
+        {
+            "name": "youngs_modulus",
+            "type": "scalar",
+            "values": 205000000000,
+            "units": "Pa"
+        },
+        {
+            "name": "poissons_ratio",
+            "type": "scalar",
+            "values": 0.284
+        },
+        {
+            "name": "density",
+            "type": "scalar",
+            "values": 8.19,
+            "units": "g/cm^3"
+        }
+    ]
+}

@@ -88,44 +88,26 @@ def getCADconverterParameterListJSON(channelPath):
 # Young's modulus (z):                  158 GPa         
 # Poisson's ratio:
 
-# Source: nTopology, which claims source: www.matweb.com
-CB_MATERIAL = {
-    "IN718" : {     # nTopology default material property
-        "youngsModulus": {"values" : 205000000000, "units" : "Pa"},
-        "poissonsRatio" : {"values" : 0.284, "units" : "1"},  #0.284,
-        "density": {"values" : 8.19, "units" : "g/cm^3"}
-    },
-    "316L-0410" : {     # nTopology default material property
-        "youngsModulus": {"values" : 193000000000, "units" : "Pa"},
-        "poissonsRatio" : {"values" : 0.28, "units" : "1"},      #0.28,
-        "density": {"values" : 8.0, "units" : "g/cm^3"}
-    },
-    "MaragingSteel" : {     # https://www.researchgate.net/profile/Katarina-Monkova-2/publication/325018758_Study_of_3D_printing_direction_and_effects_of_heat_treatment_on_mechanical_properties_of_MS1_maraging_steel/links/5d20b5b0458515c11c18644d/Study-of-3D-printing-direction-and-effects-of-heat-treatment-on-mechanical-properties-of-MS1-maraging-steel.pdf
-        "youngsModulus": {"values" : 123123, "units" : "Pa"},
-        "poissonsRatio" : {"values" : 123123, "units" : "1"},      #123123,
-        "density": {"values" : 123123, "units" : "g/cm^3"}
-    }
-}
+
 
 # Converts map to nTopology JSON input suitable format
 def getMaterialParameterJSON(materialKey):
     youngsModulus = {
         "name" : "youngs_modulus",
         "type" : "scalar",
-        "values" : CB_MATERIAL[materialKey]["youngsModulus"]["values"],
-        "units" : CB_MATERIAL[materialKey]["youngsModulus"]["units"]
+        "values" : ENVIRONMENT.CB_MATERIAL[materialKey]["youngsModulus"]["values"],
+        "units" : ENVIRONMENT.CB_MATERIAL[materialKey]["youngsModulus"]["units"]
     }
     poissonsRatio = {
         "name" : "poissons_ratio",
         "type" : "scalar",
-        "values" : CB_MATERIAL[materialKey]["poissonsRatio"]["values"],
-        "units" : CB_MATERIAL[materialKey]["poissonsRatio"]["units"]
+        "values" : ENVIRONMENT.CB_MATERIAL[materialKey]["poissonsRatio"]["values"]
     }
     density = {
         "name" : "density",
         "type" : "scalar",
-        "values" : CB_MATERIAL[materialKey]["density"]["values"],
-        "units" : CB_MATERIAL[materialKey]["density"]["units"]
+        "values" : ENVIRONMENT.CB_MATERIAL[materialKey]["density"]["values"],
+        "units" : ENVIRONMENT.CB_MATERIAL[materialKey]["density"]["units"]
     }
     return [youngsModulus, poissonsRatio, density]
 
