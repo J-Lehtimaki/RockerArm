@@ -1,5 +1,7 @@
-from .CB_cad_converter import CadConverterParameters as CCparams
-from .CB_manufacturing_data_exporter import ManFactDataParameters as MFDparams
+from CB_cad_converter.CadConverterParameters \
+    import CadConverterParameters as CCP
+from CB_manufacturing_data_exporter.ManFactDataParameters \
+    import ManufacturingDataExporterParameters as MFDparams
 
 import os
 
@@ -7,12 +9,20 @@ import os
 # the 1st phase sample generation goes here.
 class FirstPhaseParameterHandler:
     def __init__(self):
-        self._dynamicParamsLists = []       # List of lists of dicts [[{}], [{}], ..]
-        self._constParams = []              # List of dicts [{}, {}, ...]
+        self._dynamicParamsLists = {
+            "CadConverterParams" : [],  # list of lists of dicts
+            "material" : []     # list of lists of dicts
+        }
+        self._staticParamsLists = []
+        self._CCP = CCP()
+
+    def getDynamicParamsLists(self): return self._dynamicParamsLists
+    def getStaticParamsLists(self): return self._staticParamsLists
 
     # Creates channel shape based parameters and appends to dynamic variable list
-    # Param1: [{"pathToChannel", "basename"}, ...]
-    def parseAbsolutePathBasename(channelListDict):
-        None
+    # Param1: [{"absPath", "basename"}, ...]
+    def createCadConverterParameters(self, channelListDict):
+        for pair in channelListDict:
+            CCparamSet = self._CCP.getBlockParamsJSON(pair["absPath"])
+            self._dynamicParamsLists["CadConverterParams"].append(CCparamSet)
 
-    

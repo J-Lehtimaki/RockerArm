@@ -13,60 +13,9 @@ import os
 # nTopCaller.py. Those have to be set and modified manually for each
 # CB -stage.
 
-# --------------------------------------------------------------------------------
-#   	                        0. CB_CAD_converter
-# --------------------------------------------------------------------------------
-# NOTE: Only channel path is varying here.
-# NOTE: All paths are are to solid bodies EXCEPT 1 PR_xy_bot -surface .
-#   Path_LO_channels    (dynamic)
-#   Path_DS
-#   Path_machining      (PR, pin, V united in .stp input)
-#   Path_PR_bushing_enclosed
-#   Path_PR_hole_inverse
-#   Path_PR_machining_allowance
-#   Path_PR_passive_region_booster
-#   Path_PR_cyl_surf_bottom
-#   Path_V_bushing_enclosed
-#   Path_V_hole_inverse
-#   Path_V_machining_allowance
-#   Path_V_passive_region_booster
-#   Path_pin_bushing_enclosed
-#   Path_pin_hole_inverse
-#   Path_pin_machining_allowance
-#   Path_fixture
-#   Path_fixture_machining_allowance
 
-# This kind of approach was chosen to prevent absolute paths ending up to git origin
-CB_CAD_CONVERTER_PARAMS = {
-    "Path_LO_channels" : ENVIRONMENT.CB_CAD_CONVERTER_PATHS["Path_LO_channels"],
-    "Path_DS" : ENVIRONMENT.CB_CAD_CONVERTER_PATHS["Path_DS"],
-    "Path_machining" : ENVIRONMENT.CB_CAD_CONVERTER_PATHS["Path_machining"],
-    "Path_PR_bushing_enclosed" : ENVIRONMENT.CB_CAD_CONVERTER_PATHS["Path_PR_bushing_enclosed"],
-    "Path_PR_hole_inverse" : ENVIRONMENT.CB_CAD_CONVERTER_PATHS["Path_PR_hole_inverse"], 
-    "Path_PR_machining_allowance" : ENVIRONMENT.CB_CAD_CONVERTER_PATHS["Path_PR_machining_allowance"],
-    "Path_PR_passive_region_booster" : ENVIRONMENT.CB_CAD_CONVERTER_PATHS["Path_PR_passive_region_booster"],
-    "Path_PR_cyl_surf_bottom" : ENVIRONMENT.CB_CAD_CONVERTER_PATHS["Path_PR_cyl_surf_bottom"],
-    "Path_V_bushing_enclosed" : ENVIRONMENT.CB_CAD_CONVERTER_PATHS["Path_V_bushing_enclosed"],
-    "Path_V_hole_inverse" : ENVIRONMENT.CB_CAD_CONVERTER_PATHS["Path_V_hole_inverse"],
-    "Path_V_machining_allowance" : ENVIRONMENT.CB_CAD_CONVERTER_PATHS["Path_V_machining_allowance"],
-    "Path_V_passive_region_booster" : ENVIRONMENT.CB_CAD_CONVERTER_PATHS["Path_V_passive_region_booster"],
-    "Path_pin_bushing_enclosed" : ENVIRONMENT.CB_CAD_CONVERTER_PATHS["Path_pin_bushing_enclosed"],
-    "Path_pin_hole_inverse" : ENVIRONMENT.CB_CAD_CONVERTER_PATHS["Path_pin_hole_inverse"],
-    "Path_pin_machining_allowance" : ENVIRONMENT.CB_CAD_CONVERTER_PATHS["Path_pin_machining_allowance"],
-    "Path_fixture" : ENVIRONMENT.CB_CAD_CONVERTER_PATHS["Path_fixture"],
-    "Path_fixture_machining_allowance" : ENVIRONMENT.CB_CAD_CONVERTER_PATHS["Path_fixture_machining_allowance"]
-}
 
-# Converts map to nTopology JSON input suitable format
-# Return:  list of maps [{<name>, <type>, <value>}, ...]
-def getCADconverterParameterListJSON(channelPath):
-    paramList = []
-    for key in CB_CAD_CONVERTER_PARAMS:
-        ntopConversion = {"name":key, "type":"text", "value":CB_CAD_CONVERTER_PARAMS[key]}
-        if(key == "Path_LO_channels"):
-            ntopConversion = {"name":key, "type":"text", "value":channelPath}
-        paramList.append(ntopConversion)
-    return paramList
+
 
 # --------------------------------------------------------------------------------
 #                      1. Custom Material (TO_material)

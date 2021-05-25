@@ -1,1 +1,1 @@
-__all__ = ["FAEParameters", "ENVfea"]
+__all__ = ["FEAParameters", "ENVfea"]
