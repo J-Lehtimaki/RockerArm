@@ -45,6 +45,13 @@ class MaterialParameters:
         }
         return [youngsModulus, poissonsRatio, density]
 
+    def getMaterialsByID(self, material_ID_list):
+        retVal = []
+        for mat in material_ID_list:
+            if mat in CB_MATERIAL:
+                retVal.append(self.getMaterialByID(mat))
+        return retVal
+
     # Returns a list of lists of dicts, which are parameter lists
     # for each material choise described in file ./ENVmaterial.py
     def getAllBlockParamsJSON(self):

@@ -41,3 +41,23 @@ class MaterialParametersTestCase(unittest.TestCase):
         self.assertTrue(t[0][2]["units"] == "g/cm^3")
         self.assertTrue(t[0][2]["values"] == 8.19)
 
+    def testGetMaterialsByID(self):
+        t = self._MP.getMaterialsByID(["IN718", "316L"])
+
+        # Excpect [[{},{},{}, ...], [], ...]
+        # Currently there are only 2 materials
+        self.assertTrue(len(t) == 2)
+
+        # Test access inconell
+        self.assertTrue(t[0][0]["name"] == "youngs_modulus")
+        self.assertTrue(t[0][0]["units"] == "Pa")
+        self.assertTrue(t[0][0]["values"] == 205000000000)
+
+        self.assertTrue(t[0][1]["name"] == "poissons_ratio")
+        self.assertTrue(t[0][1]["type"] == "scalar")
+        self.assertTrue(t[0][1]["values"] == 0.284)
+
+        self.assertTrue(t[0][2]["name"] == "density")
+        self.assertTrue(t[0][2]["units"] == "g/cm^3")
+        self.assertTrue(t[0][2]["values"] == 8.19)
+    
