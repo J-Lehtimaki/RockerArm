@@ -41,38 +41,7 @@ import os
 # Create folder structure for channel configuration if it does not already exist
 # Return: Paths to channel specific directories
 def createChannelFolder(channel_id):
-    baseDir = ENVIRONMENT.CB_TOP_OPT_PARAMS["Path_mesh_export_base_dir"]
-    channelSubDir = os.path.join(baseDir, channel_id)
-    topOptMeshFolder = os.path.join(channelSubDir, ENVIRONMENT.TOP_OPT_MESH_FOLDER_NAME)
-    manufacturingDataFolder = os.path.join(channelSubDir, ENVIRONMENT.MAN_FACT_FOLDER_NAME)
-    feaFolder = os.path.join(channelSubDir, ENVIRONMENT.FEA_FOLDER)
-    for dirPath in [channelSubDir, topOptMeshFolder, manufacturingDataFolder, feaFolder]:
-        if not os.path.exists(dirPath):
-            os.makedirs(dirPath)
-    folders = {
-        "channelRoot" : channelSubDir,
-        "topOptMeshFolder" : topOptMeshFolder,
-        "manufacturingDataFolder" : manufacturingDataFolder,
-        "feaFolder" : feaFolder
-    }
-    return folders
-
-# Converts map to nTopology JSON input suitable format
-# Return:  list of maps [{<name>, <type>, <value>}, ...]
-def getTopOptParameterListJSON(channel_id, material_id):
-    cbTopOptParamsMap = {
-        # Each channel_id into own subfolder
-        "Path_mesh_export_dir" : createChannelFolder(channel_id)["channelRoot"],
-        "basename" : ENVIRONMENT.CB_TOP_OPT_PARAMS["basename"],
-        "channel_id" : channel_id,
-        "material_id" : material_id
-    }
-    retVal = []
-    for key in cbTopOptParamsMap:
-        temp = {"name":key, "type":"text", "value":cbTopOptParamsMap[key]}
-        retVal.append(temp)
-    return retVal
-
+    pass
 
 # --------------------------------------------------------------------------------
 #               3. FE Validation, Static Structural (CB_FEA_exporter)

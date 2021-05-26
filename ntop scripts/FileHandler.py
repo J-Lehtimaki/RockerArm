@@ -12,8 +12,11 @@ class FirstPhaseFileHandler:
         self._pathToInputChannels = ENV.PATH_DIR_CHANNELS_STP_INPUT
         self._inputFileExtension = ENV.INPUT_FILE_EXTENSION
         self._pathRoot = ENV.PATH_PROJECT_ROOT
+        self._dirnameSamples = ENV.DIRNAME_SAMPLES
+        self._pathSampleFolder = os.path.join(self._pathRoot, self._dirnameSamples)
         self._dirnameVerMajor = []   # str[] created from input channels basename
         self._pathVerMajor = []     # str[] paths to each ver major folder in root
+        self._dictsVerMajor = []     # {"basename":x,"absPath":y}[] dict list
         self._dirnameJSON = ENV.DIRNAME_JSON
         self._dirnameJSONinput = ENV.DIRNAME_INPUT_JSON
         self._dirnameJSONoutput = ENV.DIRNAME_OUTPUT_JSON
@@ -21,8 +24,17 @@ class FirstPhaseFileHandler:
         self._dirnameManFactData = ENV.DIRNAME_MAN_FACT_DATA
         self._dirnameFEA = ENV.DIRNAME_FEA
 
+    def getVerMajorDict(self): return self._dictsVerMajor
+    def getPathRoot(self): return self._pathRoot
+    def getDirnameJSONinput(self): return self._dirnameJSONinput
+    def getDirnameJSONoutput(self): return self._dirnameJSONoutput
+    def getDirnameMesh(self): return self._dirnameMesh
+    def getDirnameManFactData(self): return self._dirnameManFactData
+    def getDirnameFEA(self): return self._dirnameFEA
+
     def createFileSystem(self):
         self.createRoot()
+        self.createSampleFolder()
         self.createDirnameVerMajor()
         self.createVerMajorCaseFolders()
         self.createSubfolders([
@@ -38,6 +50,10 @@ class FirstPhaseFileHandler:
         if not os.path.exists(self._pathRoot):
             os.makedirs(self._pathRoot)
 
+    def createSampleFolder(self):
+        if not os.path.exists(self._pathSampleFolder):
+            os.makedirs(self._pathSampleFolder)
+
     def createDirnameVerMajor(self):
         find = os.path.join(self._pathToInputChannels, self._inputFileExtension)
         for i in glob.iglob(find, recursive=False):
@@ -52,8 +68,12 @@ class FirstPhaseFileHandler:
     def createVerMajorCaseFolders(self):
         self._pathVerMajor.clear()     # Clear contents to prevent accidental duplicates
         for dirname in self._dirnameVerMajor:
-            caseFolder = os.path.join(self._pathRoot, dirname)
+            caseFolder = os.path.join(self._pathSampleFolder,dirname)
             self._pathVerMajor.append(caseFolder)
+            self._dictsVerMajor.append({
+                "basename":dirname,
+                "absPath":caseFolder
+            })
             if not os.path.exists(caseFolder):
                 os.makedirs(caseFolder)
 
@@ -65,24 +85,4 @@ class FirstPhaseFileHandler:
                 subfolder = os.path.join(dir, sf)
                 if not os.path.exists(subfolder):
                     os.makedirs(subfolder)
-
-    def createSubfoldersFEA(self):
-        for dir in self._pathVerMajor:
-            feaFolder = os.path.join(dir, self._dirnameFEA)
-            if not os.path.exists(feaFolder):
-                os.makedirs(feaFolder)
-
-    def createSubfoldersManFactData(self):
-        for dir in self._pathVerMajor:
-            manFactFolder = os.path.join(dir, self._dirnameManFactData)
-            if not os.path.exists(manFactFolder):
-                os.makedirs(manFactFolder)
-    
-    def createSubfoldersMesh(self):
-        for dir in self._pathVerMajor:
-            meshFolder = os.path.join(dir, self._dirnameMesh)
-            if not os.path.exists(meshFolder):
-                os.makedirs(meshFolder)
-    
-    # Create the 
 

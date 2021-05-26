@@ -5,5 +5,7 @@
 **/env*.py
 **/ENV*.py
 
+unittests/jsondumps/*
+
 **/AUTH.py
 

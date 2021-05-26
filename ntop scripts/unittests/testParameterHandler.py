@@ -1,4 +1,8 @@
 import unittest
+import json
+from .ENVunittest import \
+    PATH_CAD_CONVERTER_JSONDUMP, \
+    PATH_MATERIAL_JSONDUMP
 
 from ParameterHandler import FirstPhaseParameterHandler as FPPH
 
@@ -16,6 +20,9 @@ class FirstPhaseParameterHandlerTestCase(unittest.TestCase):
             {"absPath" : "C:\\my\\fake\\path\\8.stp", "basename" : "8"}
         ]
 
+    def paraHandlerTestPrint(self, msg):
+        print(f"\nPARAMETER TESTS - {msg}\n")
+
     def testCadConverterParameterBuilder(self):
         a = self._FPPH.createCadConverterParameters(self._fakeChannelDict)
         self.assertTrue(len(self._FPPH.getDynamicParamsLists()["CadConverterParams"]) == 8)
@@ -24,3 +31,14 @@ class FirstPhaseParameterHandlerTestCase(unittest.TestCase):
             "C:\\my\\fake\\path\\8.stp"
         )
 
+        # Dump the results to JSON
+        ccpInputsJSON = self._FPPH.getDynamicParamsLists()["CadConverterParams"]
+        with open(PATH_CAD_CONVERTER_JSONDUMP, 'w') as outfile:
+            json.dump(ccpInputsJSON, outfile, indent=2)
+
+
+    def testMaterialParameterBuild(self):
+        self._FPPH.createMaterialParameters(["IN718", "316L"])
+        materialInputsJSON = self._FPPH.getDynamicParamsLists()["material"]
+        with open(PATH_MATERIAL_JSONDUMP, 'w') as outfile:
+            json.dump(materialInputsJSON, outfile, indent=2)

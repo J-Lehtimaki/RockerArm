@@ -6,6 +6,9 @@ class MaterialParametersTestCase(unittest.TestCase):
     def setUp(self):
         self._MP = MP()
 
+    def materialTestPrint(self, msg):
+        print(f"\nMATERIAL TESTS - {msg}\n")
+
     def testIN718(self):
         inconel = self._MP.getMaterialByID("IN718")
         self.assertTrue(len(inconel) == 3)
@@ -60,4 +63,23 @@ class MaterialParametersTestCase(unittest.TestCase):
         self.assertTrue(t[0][2]["name"] == "density")
         self.assertTrue(t[0][2]["units"] == "g/cm^3")
         self.assertTrue(t[0][2]["values"] == 8.19)
+
+    def testPrint(self):
+        t = self._MP.getMaterialsByID(["IN718", "316L"])
+        self.materialTestPrint("Looping the getMaterialsByID")
+
+        self.materialTestPrint("316L")
+        for i in t[1]:
+            print(i)
+        self.materialTestPrint("Inconel")
+        for i in t[0]:
+            print(i)
+
+        b = self._MP.getAllBlockParamsJSON()
+        self.materialTestPrint("Looping the getAllBlockParamsJSON")
+        for i in b[1]:
+            print(i)
+        self.materialTestPrint("Inconel")
+        for i in b[0]:
+            print(i)
 

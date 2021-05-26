@@ -2,6 +2,8 @@ from CB_cad_converter.CadConverterParameters \
     import CadConverterParameters as CCP
 from CB_manufacturing_data_exporter.ManFactDataParameters \
     import ManufacturingDataExporterParameters as MFDparams
+from CB_material.MaterialParameters \
+    import MaterialParameters as MP
 import ENVIRONMENT as ENV
 from FileHandler import FirstPhaseFileHandler
 
@@ -17,9 +19,10 @@ class FirstPhaseParameterHandler:
             "exportPaths" : []          # list of lists of dicts
         }
         self._staticParamsLists = []    # list of dicts
-        self._allCasesParameters = []   # list of lists of dicts, all set combinations
+        self._filesystemParameters = [] # includes values for CB and nTopCL
         self._CCP = CCP()
         self._MFDP = MFDparams()
+        self._MP = MP()
         self._FPFH = FirstPhaseFileHandler()
 
     def getDynamicParamsLists(self): return self._dynamicParamsLists
@@ -35,11 +38,30 @@ class FirstPhaseParameterHandler:
     # Creates material based parameters and appends to dynamic variable list
     # Param1: material_ID[<str>]
     def createMaterialParameters(self, materialsList):
-        for matParamSet in self._MFDP.getMaterialsByID(materialsList):
+        for matParamSet in self._MP.getMaterialsByID(materialsList):
             self._dynamicParamsLists["material"].append(matParamSet)
 
-    # Creates the static variables for main CB what are used by nested CBs
-    # Note that version major
-    # Param1: List of dicts [{"verMajorDirPath"}]
-    def createSampleVersioningParameterSets(self):
-        pass
+    # Creates the filesystem parameters
+    def createFilesystemParameterSets(self):
+        verMajorDict = self._FPFH.getVerMajorDict()
+        dirnameJSONinput = self._FPFH.getDirnameJSONinput()
+        dirnameJSONoutput = self._FPFH.getDirnameJSONoutput()
+        dirnameMesh = self._FPFH.getDirnameMesh()
+        dirnameManFactdata = self._FPFH.getDirnameManFactData()
+
+        for v in verMajorDict:
+            dirpathMesh = os.path.join(verMajorDict, dirnameMesh)
+            dirpathManFactData = os.path.join(verMajorDict, dirnameManFactdata)
+
+            self._filesystemParameters.append({
+                "CB" : [
+                    {"name":"Dirpath_mesh", "type":"text", "value" : dirpathMesh},
+                    {"name":"Dirpath_man_fact_data", "type":"text", "value": dirpathManFactData}
+                ],
+                # ntopcl parameters have to joined with basename and identifiers
+                "ntopcl" : {
+                    "JSON_input" : os.path.join(verMajorDict, dirnameJSONinput),
+                    "JSON_output" : os.path.join(verMajorDict, dirnameJSONoutput)
+                }
+            })
+

@@ -46,8 +46,10 @@ class CadConverterParameters:
         }
 
     # Converts map to nTopology JSON input suitable format
-    # Param 1: Absolute path to channel
-    # Return:  list of maps [{<name>, <type>, <value>}, ...]
+    # NOTE:     Param1 is needed so that to create varying channel configuration.
+    # TODO:     For future projects extend this function to be more flexible.
+    # Param 1:  Absolute path to channel
+    # Return:   list of maps [{<name>, <type>, <value>}, ...]
     def getBlockParamsJSON(self, channelPath):
         paramList = []
         for key in self._plainParameters:
