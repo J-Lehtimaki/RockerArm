@@ -15,7 +15,7 @@
 # fail:                 no              ?
 # Amplitude:            >240 Mpa        134.5 MPa
 # Young's modulus (z):                  158 GPa         
-# Poisson's ratio:
+# Poisson's ratio:      ?               ?
 
 from .ENVmaterial import CB_MATERIAL
 

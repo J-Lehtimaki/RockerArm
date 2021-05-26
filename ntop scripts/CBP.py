@@ -13,53 +13,6 @@ import os
 # nTopCaller.py. Those have to be set and modified manually for each
 # CB -stage.
 
-
-
-
-
-# --------------------------------------------------------------------------------
-#                      1. Custom Material (TO_material)
-# --------------------------------------------------------------------------------
-# Topology optimization is to be done with 3 different materials Wärtsilä uses
-# and has fatigue tests done. The fatigue limits are needed at validation phase,
-# which is performed with other application written in C++. Materials are:
-# - Inconel 718, at 20C >> fatigue limit 240 MPa
-# - 316L EOS  >> fatigue limit: 134,5 MPa
-# - MaragingSteel
-#
-# Material:             Inconel 718     316L-0410       MaraginSteel
-# Printer:              ?               EOS             ?
-# Heat treatment:       As built        As built        ?
-# Cycles:               1.00E+09        1.00E+06        ?
-# runout:               yes             ?               ?
-# fail:                 no              ?               ?
-# Amplitude:            >240 Mpa        134.5 MPa       ?
-# Young's modulus (z):                  158 GPa         
-# Poisson's ratio:
-
-
-
-# Converts map to nTopology JSON input suitable format
-def getMaterialParameterJSON(materialKey):
-    youngsModulus = {
-        "name" : "youngs_modulus",
-        "type" : "scalar",
-        "values" : ENVIRONMENT.CB_MATERIAL[materialKey]["youngsModulus"]["values"],
-        "units" : ENVIRONMENT.CB_MATERIAL[materialKey]["youngsModulus"]["units"]
-    }
-    poissonsRatio = {
-        "name" : "poissons_ratio",
-        "type" : "scalar",
-        "values" : ENVIRONMENT.CB_MATERIAL[materialKey]["poissonsRatio"]["values"]
-    }
-    density = {
-        "name" : "density",
-        "type" : "scalar",
-        "values" : ENVIRONMENT.CB_MATERIAL[materialKey]["density"]["values"],
-        "units" : ENVIRONMENT.CB_MATERIAL[materialKey]["density"]["units"]
-    }
-    return [youngsModulus, poissonsRatio, density]
-
 # --------------------------------------------------------------------------------
 #                      2. Topology optimization CB (TO_CB)
 # --------------------------------------------------------------------------------
