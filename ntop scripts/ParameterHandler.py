@@ -4,8 +4,6 @@ from CB_manufacturing_data_exporter.ManFactDataParameters \
     import ManufacturingDataExporterParameters as MFDparams
 from CB_material.MaterialParameters \
     import MaterialParameters as MP
-import ENVIRONMENT as ENV
-from FileHandler import FirstPhaseFileHandler
 
 import os
 
@@ -23,10 +21,10 @@ class FirstPhaseParameterHandler:
         self._CCP = CCP()
         self._MFDP = MFDparams()
         self._MP = MP()
-        self._FPFH = FirstPhaseFileHandler()
 
     def getDynamicParamsLists(self): return self._dynamicParamsLists
     def getStaticParamsLists(self): return self._staticParamsLists
+    def getFilesystemParameters(self): return self._filesystemParameters
 
     # Creates channel shape based parameters and appends to dynamic variable list
     # Param1: [{"absPath", "basename"}, ...]
@@ -42,16 +40,16 @@ class FirstPhaseParameterHandler:
             self._dynamicParamsLists["material"].append(matParamSet)
 
     # Creates the filesystem parameters
-    def createFilesystemParameterSets(self):
-        verMajorDict = self._FPFH.getVerMajorDict()
-        dirnameJSONinput = self._FPFH.getDirnameJSONinput()
-        dirnameJSONoutput = self._FPFH.getDirnameJSONoutput()
-        dirnameMesh = self._FPFH.getDirnameMesh()
-        dirnameManFactdata = self._FPFH.getDirnameManFactData()
+    def createFilesystemParameterSets(self, a, b, c, d, e):
+        verMajorDict = a        # FileHandler.getVerMajorDict()
+        dirnameJSONinput = b    # FileHandler.getDirnameJSONinput()
+        dirnameJSONoutput = c   # FileHandler.getDirnameJSONoutput()
+        dirnameMesh = d         # FileHandler.getDirnameMesh()
+        dirnameManFactdata = e  # FileHandler.getDirnameManFactData()
 
         for v in verMajorDict:
-            dirpathMesh = os.path.join(verMajorDict, dirnameMesh)
-            dirpathManFactData = os.path.join(verMajorDict, dirnameManFactdata)
+            dirpathMesh = os.path.join(v["absPath"], dirnameMesh)
+            dirpathManFactData = os.path.join(v["absPath"], dirnameManFactdata)
 
             self._filesystemParameters.append({
                 "CB" : [
@@ -60,8 +58,7 @@ class FirstPhaseParameterHandler:
                 ],
                 # ntopcl parameters have to joined with basename and identifiers
                 "ntopcl" : {
-                    "JSON_input" : os.path.join(verMajorDict, dirnameJSONinput),
-                    "JSON_output" : os.path.join(verMajorDict, dirnameJSONoutput)
+                    "JSON_input" : os.path.join(v["absPath"], dirnameJSONinput),
+                    "JSON_output" : os.path.join(v["absPath"], dirnameJSONoutput)
                 }
             })
-

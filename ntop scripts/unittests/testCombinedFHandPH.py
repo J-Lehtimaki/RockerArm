@@ -19,7 +19,16 @@ class CombinedFilehandlerParameterHandlerTestCase(unittest.TestCase):
         self._FHandler.createFileSystem()
         self._PHandler.createCadConverterParameters(self._FHandler.getVerMajorDict())
         self._PHandler.createMaterialParameters(MATERIAL_CHOICES)
-        self._PHandler.createFilesystemParameterSets()
+        self._PHandler.createFilesystemParameterSets(
+            self._FHandler.getVerMajorDict(),
+            self._FHandler.getDirnameJSONinput(),
+            self._FHandler.getDirnameJSONoutput(),
+            self._FHandler.getDirnameMesh(),
+            self._FHandler.getDirnameManFactData()
+        )
+
+        # print(f" FILEHANDER OUTPUTS :\n\n {self._FHandler.getVerMajorDict()} \n\n \
+        #     {self._FHandler.getDirnameJSONinput()} \n\n {self._FHandler.getDirnameJSONoutput()} \n\n {self._FHandler.getDirnameMesh()} \n\n {self._FHandler.getDirnameManFactData()}")
 
     def testDumpCadConverterParas(self):
         ccpInputsJSON = self._PHandler.getDynamicParamsLists()["CadConverterParams"]
@@ -32,7 +41,7 @@ class CombinedFilehandlerParameterHandlerTestCase(unittest.TestCase):
             json.dump(materialInputsJSON, outfile, indent=2)
 
     def testDumpFilesystemParas(self):
-        filesystemInputsJSON = self._PHandler.getDynamicParamsLists()["exportPaths"]
+        filesystemInputsJSON = self._PHandler.getFilesystemParameters()
         with open(PATH_FILESYSTEM_JSONDUMP, 'w') as outfile:
             json.dump(filesystemInputsJSON, outfile, indent=2)
 
