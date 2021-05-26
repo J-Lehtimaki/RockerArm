@@ -26,3 +26,5 @@ class FirstPhaseParameterHandler:
             CCparamSet = self._CCP.getBlockParamsJSON(pair["absPath"])
             self._dynamicParamsLists["CadConverterParams"].append(CCparamSet)
 
+    def createMaterialParameters(self, materialsListDict):
+        pass

@@ -7,5 +7,6 @@ from CB_material import *
 from CB_top_opt import *
 
 from .testParameterHandler import FirstPhaseParameterHandlerTestCase
+from .testMaterialParameters import MaterialParametersTestCase
 
 from .TEST_SUITE import *

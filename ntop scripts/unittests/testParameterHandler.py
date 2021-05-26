@@ -23,3 +23,4 @@ class FirstPhaseParameterHandlerTestCase(unittest.TestCase):
             self._FPPH.getDynamicParamsLists()["CadConverterParams"][7][0]["value"] ==
             "C:\\my\\fake\\path\\8.stp"
         )
+
