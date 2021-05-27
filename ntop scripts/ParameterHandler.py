@@ -16,15 +16,63 @@ class FirstPhaseParameterHandler:
             "material" : [],            # list of lists of dicts
             "exportPaths" : []          # list of lists of dicts
         }
-        self._staticParamsLists = []    # list of dicts
         self._filesystemParameters = [] # includes values for CB and nTopCL
         self._CCP = CCP()
         self._MFDP = MFDparams()
         self._MP = MP()
 
     def getDynamicParamsLists(self): return self._dynamicParamsLists
-    def getStaticParamsLists(self): return self._staticParamsLists
     def getFilesystemParameters(self): return self._filesystemParameters
+
+    def getSortedFSparams(self): return sorted(
+        self._filesystemParameters, key = lambda i: 
+            int(i["CB"][0]["value"].split("\\")
+                [len(i["CB"][0]["value"].split("\\")) - 2]
+            )
+    )
+
+    def mergeCadConverterToFilesystem(self):
+        retval = []
+        fSorted = self.getSortedFSparams()
+        cSorted = self.getSortedCCparams()
+
+        if(len(fSorted) == len(cSorted)):
+            for i in range(0, len(fSorted)-1):
+                retval.append({
+                    "CB" : fSorted[i]["CB"] + cSorted[i],
+                    "ntopcl" : fSorted[i]["ntopcl"]
+                })
+            return retval
+
+    def getSortedChannelIDS(self):
+        fSorted = self.getSortedFSparams()
+        idList = []
+        for i in fSorted:
+            idList.append(int(
+                i["CB"][0]["value"].split("\\")[len(i["CB"][0]["value"].split("\\")) - 2]
+                )
+            )
+        idList.sort()
+        return idList
+
+    def formAllInputs(self):
+        retval = []
+        CcFsMerged = self.mergeCadConverterToFilesystem()
+        materials = self._dynamicParamsLists["material"]
+        channelIDs = self.getSortedChannelIDS()
+        return 0
+
+    # Returns sorted list of [][]{} based on path basename number
+    # example "C:\\my\\fake\\path\\urho_kekkonen_123123.stp"
+    #                                            ^^^^^^
+    def getSortedCCparams(self):
+        return sorted(
+            self._dynamicParamsLists["CadConverterParams"],
+            key = lambda i:
+                int(i[["Path_LO_channels" in j["name"] for j in i].index(True)]
+                    ["value"].split("\\")[-1].split(".")[0].split("_")[-1]
+                )
+        )
 
     # Creates channel shape based parameters and appends to dynamic variable list
     # Param1: [{"absPath", "basename"}, ...]
@@ -40,12 +88,17 @@ class FirstPhaseParameterHandler:
             self._dynamicParamsLists["material"].append(matParamSet)
 
     # Creates the filesystem parameters
+    # Param1: use FileHandler.getVerMajorDict()
+    # Param2: use FileHandler.getDirnameJSONinput()
+    # Param3: use FileHandler.getDirnameJSONoutput()
+    # Param4: use FileHandler.getDirnameMesh()
+    # Param5: use FileHandler.getDirnameManFactData()
     def createFilesystemParameterSets(self, a, b, c, d, e):
-        verMajorDict = a        # FileHandler.getVerMajorDict()
-        dirnameJSONinput = b    # FileHandler.getDirnameJSONinput()
-        dirnameJSONoutput = c   # FileHandler.getDirnameJSONoutput()
-        dirnameMesh = d         # FileHandler.getDirnameMesh()
-        dirnameManFactdata = e  # FileHandler.getDirnameManFactData()
+        verMajorDict = a
+        dirnameJSONinput = b
+        dirnameJSONoutput = c
+        dirnameMesh = d
+        dirnameManFactdata = e  
 
         for v in verMajorDict:
             dirpathMesh = os.path.join(v["absPath"], dirnameMesh)
@@ -57,8 +110,11 @@ class FirstPhaseParameterHandler:
                     {"name":"Dirpath_man_fact_data", "type":"text", "value": dirpathManFactData}
                 ],
                 # ntopcl parameters have to joined with basename and identifiers
+                # to identify material and version number "ver_material.json"
                 "ntopcl" : {
                     "JSON_input" : os.path.join(v["absPath"], dirnameJSONinput),
                     "JSON_output" : os.path.join(v["absPath"], dirnameJSONoutput)
                 }
             })
+
+

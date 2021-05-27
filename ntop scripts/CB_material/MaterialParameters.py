@@ -43,7 +43,12 @@ class MaterialParameters:
             "values" : CB_MATERIAL[material_ID]["density"]["values"],
             "units" : CB_MATERIAL[material_ID]["density"]["units"]
         }
-        return [youngsModulus, poissonsRatio, density]
+        materialID = {
+            "name" : "material_ID",
+            "type" : "text",
+            "value" : material_ID
+        }
+        return [youngsModulus, poissonsRatio, density, materialID]
 
     def getMaterialsByID(self, material_ID_list):
         retVal = []

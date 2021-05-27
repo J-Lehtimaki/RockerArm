@@ -32,6 +32,14 @@ class FirstPhaseFileHandler:
     def getDirnameManFactData(self): return self._dirnameManFactData
     def getDirnameFEA(self): return self._dirnameFEA
 
+    def getChannelsDict(self):
+        retVal = []
+        find = os.path.join(self._pathToInputChannels, self._inputFileExtension)
+        for i in glob.iglob(find, recursive=False):
+            id = i.split("\\")[-1].split(".")[0].split("_")[-1]
+            retVal.append({"absPath":i,"name":id})
+        return retVal
+
     def createFileSystem(self):
         self.createRoot()
         self.createSampleFolder()
@@ -85,4 +93,3 @@ class FirstPhaseFileHandler:
                 subfolder = os.path.join(dir, sf)
                 if not os.path.exists(subfolder):
                     os.makedirs(subfolder)
-
