@@ -71,3 +71,8 @@ class CombinedFilehandlerParameterHandlerTestCase(unittest.TestCase):
             t.append({"chID":i})
         with open(PATH_SORTED_CH_ID, 'w') as outfile:
             json.dump(t, outfile, indent=2)
+
+    def testSizeOfFinalInputs(self):
+        final = self._PHandler.getAllInputs()
+        nomaterial = self._PHandler.mergeCadConverterToFilesystem()
+        self.assertEqual(len(final), 2*len(nomaterial))
