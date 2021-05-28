@@ -55,12 +55,34 @@ class FirstPhaseParameterHandler:
         idList.sort()
         return idList
 
-    def formAllInputs(self):
+    def getAllInputs(self):
         retval = []
         CcFsMerged = self.mergeCadConverterToFilesystem()
         materials = self._dynamicParamsLists["material"]
         channelIDs = self.getSortedChannelIDS()
-        return 0
+        
+        chIDmaterialID =[]
+
+        for id in channelIDs:
+            sublist = []
+            sublist.append({"name":"Channel_ID", "type":"text","value":str(id)})
+            for list in materials:
+                for dictParameter in list:
+                    sublist.append(
+                        dictParameter
+                    )
+            chIDmaterialID.append(sublist)
+
+        for list in CcFsMerged:
+            for channelAndMaterial in chIDmaterialID:
+                retval.append({
+                    "CB": list["CB"] + channelAndMaterial,
+                    "ntopcl": {
+                        "JSON_input" : list["ntopcl"]["JSON_input"]+".MyInputJSON.JOSN",
+                        "JSON_output" : list["ntopcl"]["JSON_output"]+".MyInputJSON.JOSN"
+                    }
+                })
+        return retval
 
     # Returns sorted list of [][]{} based on path basename number
     # example "C:\\my\\fake\\path\\urho_kekkonen_123123.stp"

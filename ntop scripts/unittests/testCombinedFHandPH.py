@@ -62,8 +62,9 @@ class CombinedFilehandlerParameterHandlerTestCase(unittest.TestCase):
 
     # CC filesystem Channel ID Material, with nTopCL .json filenames
     def testDumpMergedEverything(self):
-        mergedEverything = self._PHandler.formAllInputs()
-
+        mergedEverything = self._PHandler.getAllInputs()
+        with open(PATH_MERGED_FS_CC_CHID_MATID_JSONDUMP, 'w') as outfile:
+            json.dump(mergedEverything, outfile, indent=2)
 
     # def testPrintSortedCCparams(self):
     #     a = self._PHandler.getSortedCCparams()
