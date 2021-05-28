@@ -68,7 +68,7 @@ class FirstPhaseParameterHandler:
         retval = []
         idList = self.getSortedChannelIDS()
         for id in idList:
-            retval.append({"name" : "channel_ID", "type" : "text", "value" : id})
+            retval.append({"name" : "channel_ID", "type" : "text", "value" : str(id)})
         return retval
 
     def getAllInputs(self):
@@ -86,7 +86,7 @@ class FirstPhaseParameterHandler:
                             chID=materialChannelsIDList[i][4]["value"],
                             mID=materialChannelsIDList[i][3]["value"]
                         ),
-                    "JSON_outut":
+                    "JSON_output":
                         "{path}\\{chID}_{mID}_output.json".format(
                             path=mergedFSandCCList[i]["ntopcl"]["JSON_output"],
                             chID=materialChannelsIDList[i][4]["value"],
@@ -103,7 +103,7 @@ class FirstPhaseParameterHandler:
                             chID=materialChannelsIDList[j][4]["value"],
                             mID=materialChannelsIDList[j][3]["value"]
                         ),
-                    "JSON_outut":
+                    "JSON_output":
                         "{path}\\{chID}_{mID}_output.json".format(
                             path=mergedFSandCCList[i]["ntopcl"]["JSON_output"],
                             chID=materialChannelsIDList[j][4]["value"],
@@ -164,8 +164,8 @@ class FirstPhaseParameterHandler:
                 # ntopcl parameters have to joined with basename and identifiers
                 # to identify material and version number "ver_material.json"
                 "ntopcl" : {
-                    "JSON_input" : os.path.join(v["absPath"], dirnameJSONinput),
-                    "JSON_output" : os.path.join(v["absPath"], dirnameJSONoutput)
+                    "JSON_input" : os.path.join(v["absPath"], "nTop_JSON", dirnameJSONinput),
+                    "JSON_output" : os.path.join(v["absPath"], "nTop_JSON", dirnameJSONoutput)
                 }
             })
 
