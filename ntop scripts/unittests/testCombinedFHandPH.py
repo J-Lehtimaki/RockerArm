@@ -5,7 +5,10 @@ from .ENVunittest import \
     PATH_MATERIAL_JSONDUMP, \
     PATH_FILESYSTEM_JSONDUMP, \
     PATH_MERGED_FS_CC_JSONDUMP, \
-    PATH_MERGED_FS_CC_CHID_MATID_JSONDUMP
+    PATH_MERGED_FS_CC_CHID_MATID_JSONDUMP, \
+    PATH_GET_ALL_TEMPLOG_1, \
+    PATH_GET_ALL_TEMPLOG_2, \
+    PATH_SORTED_CH_ID
 
 from CB_material.ENVmaterial import MATERIAL_CHOICES
 
@@ -29,9 +32,6 @@ class CombinedFilehandlerParameterHandlerTestCase(unittest.TestCase):
             self._FHandler.getDirnameManFactData()
         )
 
-        # print(f" FILEHANDER OUTPUTS :\n\n {self._FHandler.getVerMajorDict()} \n\n \
-        #     {self._FHandler.getDirnameJSONinput()} \n\n {self._FHandler.getDirnameJSONoutput()} \n\n {self._FHandler.getDirnameMesh()} \n\n {self._FHandler.getDirnameManFactData()}")
-
     def testDumpCadConverterParas(self):
         ccpInputsJSON = self._PHandler.getSortedCCparams() #getDynamicParamsLists()["CadConverterParams"]
         with open(PATH_CAD_CONVERTER_JSONDUMP, 'w') as outfile:
@@ -44,14 +44,6 @@ class CombinedFilehandlerParameterHandlerTestCase(unittest.TestCase):
 
     def testDumpFilesystemParas(self):
         filesystemInputsJSON = self._PHandler.getSortedFSparams() #self._PHandler.getFilesystemParameters()
-        # tempDebugging = []   # Store variables for debugging
-        # for i in filesystemInputsJSON:
-        #     tempDebugging.append(i["CB"][0]["value"].split("\\")[len(i["CB"][0]["value"].split("\\")) - 2])
-        # print(tempDebugging)
-        # filesystemInputsJSON.sort(key =
-        #     lambda i: 
-        #         int(i["CB"][0]["value"].split("\\")[len(i["CB"][0]["value"].split("\\")) - 2])
-        # )
         with open(PATH_FILESYSTEM_JSONDUMP, 'w') as outfile:
             json.dump(filesystemInputsJSON, outfile, indent=2)
 
@@ -66,6 +58,16 @@ class CombinedFilehandlerParameterHandlerTestCase(unittest.TestCase):
         with open(PATH_MERGED_FS_CC_CHID_MATID_JSONDUMP, 'w') as outfile:
             json.dump(mergedEverything, outfile, indent=2)
 
-    # def testPrintSortedCCparams(self):
-    #     a = self._PHandler.getSortedCCparams()
-    #     print(a)
+    # CC filesystem Channel ID Material, with nTopCL .json filenames
+    def testDebugGetAll1(self):
+        mergedEverything = self._PHandler.getCombinedMaterialChannelID()
+        with open(PATH_GET_ALL_TEMPLOG_1, 'w') as outfile:
+            json.dump(mergedEverything, outfile, indent=2)
+
+    def testGetSortedChannelIDS(self):
+        fSorted = self._PHandler.getSortedChannelIDS()
+        t = []
+        for i in fSorted:
+            t.append({"chID":i})
+        with open(PATH_SORTED_CH_ID, 'w') as outfile:
+            json.dump(t, outfile, indent=2)

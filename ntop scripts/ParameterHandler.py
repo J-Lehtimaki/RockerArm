@@ -55,36 +55,66 @@ class FirstPhaseParameterHandler:
         idList.sort()
         return idList
 
-    def getAllInputs(self):
+    def getCombinedMaterialChannelID(self):
         retval = []
-        CcFsMerged = self.mergeCadConverterToFilesystem()
         materials = self._dynamicParamsLists["material"]
-        channelIDs = self.getSortedChannelIDS()
-        
-        chIDmaterialID =[]
-
-        for id in channelIDs:
-            sublist = []
-            sublist.append({"name":"Channel_ID", "type":"text","value":str(id)})
-            for list in materials:
-                for dictParameter in list:
-                    sublist.append(
-                        dictParameter
-                    )
-            chIDmaterialID.append(sublist)
-
-        for list in CcFsMerged:
-            for channelAndMaterial in chIDmaterialID:
-                retval.append({
-                    "CB": list["CB"] + channelAndMaterial,
-                    "ntopcl": {
-                        "JSON_input" : list["ntopcl"]["JSON_input"]+".MyInputJSON.JOSN",
-                        "JSON_output" : list["ntopcl"]["JSON_output"]+".MyInputJSON.JOSN"
-                    }
-                })
+        channelIDs = self.getSortedChannelIDdict()
+        for mlist in materials:
+            for id in channelIDs:
+                retval.append([mlist[0], mlist[1], mlist[2], mlist[3], id])
         return retval
 
-    # Returns sorted list of [][]{} based on path basename number
+    def getSortedChannelIDdict(self):
+        retval = []
+        idList = self.getSortedChannelIDS()
+        for id in idList:
+            retval.append({"name" : "channel_ID", "type" : "text", "value" : id})
+        return retval
+
+    def getAllInputs(self):
+        retval = []
+        materialChannelsIDList = self.getCombinedMaterialChannelID()
+        mergedFSandCCList = self.mergeCadConverterToFilesystem()
+        j=int(len(mergedFSandCCList)) + 1  #index materialchanlist (two materials, chanIDs ascending)
+        for i in range(0, len(mergedFSandCCList)-1):
+            retval.append({
+                "CB": mergedFSandCCList[i]["CB"] + materialChannelsIDList[i],
+                "ntopcl":{
+                    "JSON_input": 
+                        "{path}\\{chID}_{mID}_input.json".format(
+                            path=mergedFSandCCList[i]["ntopcl"]["JSON_input"],
+                            chID=materialChannelsIDList[i][4]["value"],
+                            mID=materialChannelsIDList[i][3]["value"]
+                        ),
+                    "JSON_outut":
+                        "{path}\\{chID}_{mID}_output.json".format(
+                            path=mergedFSandCCList[i]["ntopcl"]["JSON_output"],
+                            chID=materialChannelsIDList[i][4]["value"],
+                            mID=materialChannelsIDList[i][3]["value"]
+                        )
+                }
+            })
+            retval.append({
+                "CB": mergedFSandCCList[i]["CB"] + materialChannelsIDList[j],
+                "ntopcl":{
+                    "JSON_input": 
+                        "{path}\\{chID}_{mID}_input.json".format(
+                            path=mergedFSandCCList[i]["ntopcl"]["JSON_input"],
+                            chID=materialChannelsIDList[j][4]["value"],
+                            mID=materialChannelsIDList[j][3]["value"]
+                        ),
+                    "JSON_outut":
+                        "{path}\\{chID}_{mID}_output.json".format(
+                            path=mergedFSandCCList[i]["ntopcl"]["JSON_output"],
+                            chID=materialChannelsIDList[j][4]["value"],
+                            mID=materialChannelsIDList[j][3]["value"]
+                        )
+                }
+            })
+            j+=1
+        return retval
+
+    # Returns sorted [][]{} based on dict <key> "basename" : <val> abspath
     # example "C:\\my\\fake\\path\\urho_kekkonen_123123.stp"
     #                                            ^^^^^^
     def getSortedCCparams(self):
@@ -138,5 +168,4 @@ class FirstPhaseParameterHandler:
                     "JSON_output" : os.path.join(v["absPath"], dirnameJSONoutput)
                 }
             })
-
 
