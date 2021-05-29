@@ -1,13 +1,6 @@
-    # # Makes a subprocess for nTopCL -command with parameters being:
-    # # Param 1: Dict including all the CB_main inputs with correct fields
-    # # Param 2: Path to save in.json -file
-    # # Param 3: Path to save out.json -file
-    # def subProcessRockerArm(self, blockInputs, pathJSONinput , pathJSONoutput):
-
 # Author: Janne Lehtimäki
 # e-mail: janne.lehtimaki@etteplan.com
 # Company: Etteplan Finland Oy
-# License: MIT (part of thesis work for Wärtsilä)
 #
 # ---------------------------------------------------------------------------------
 #     First phase of multi-objective-shape-optimization sample generation
@@ -21,14 +14,17 @@
 #     the process for. (See example -folder for hints)
 #   - Make yourself AUTH.py file which includes your user credentials for
 #     nTopology
+
 from CustomBlockLauncher import CustomBlockLauncher
 from FileHandler import FirstPhaseFileHandler as FileHandler
 from ParameterHandler import FirstPhaseParameterHandler as ParameterHandler
+from MultiProcessHelper import MultiProcessHelper
 
+from ENVIRONMENT import PROCESS_COUNT
 from CB_material.ENVmaterial import MATERIAL_CHOICES
 
 import time
-import os
+from threading import Thread
 
 def initializeFirstPhase(fileHandler, paramHandler):
     fileHandler.createFileSystem()
@@ -42,20 +38,38 @@ def initializeFirstPhase(fileHandler, paramHandler):
         fileHandler.getDirnameManFactData()
     )
 
+def threadProcessAllInputs(threadCustomBlockCases, CBcaller):
+    for CustomBlockCase in threadCustomBlockCases:
+        CBcaller.startNtopCLsubprocess(
+            {"inputs" : CustomBlockCase["CB"]},
+            CustomBlockCase["ntopcl"]["JSON_input"],
+            CustomBlockCase["ntopcl"]["JSON_output"]
+        )
+    print("Some thread finished process all inputs")
+
 def main():
     # Create class instances necessary for first phase
     fileHandler = FileHandler()
     paramHandler = ParameterHandler()
     CBcaller = CustomBlockLauncher()
+    multiProcessHelper = MultiProcessHelper()
+    threads = []    # Subprocessed managed by threads
 
+    # Read files and create datastructures based on **/ENV*.py settings
     initializeFirstPhase(fileHandler, paramHandler)
 
-    for set in paramHandler.getAllInputs():
-        CBcaller.startNtopCLsubprocess(
-            {"inputs" : set["CB"]},
-            set["ntopcl"]["JSON_input"],
-            set["ntopcl"]["JSON_output"]
-        )
+    # Divide parameter lists equally between processes
+    processParamList = multiProcessHelper.splitInputToEqualLists(
+        paramHandler.getAllInputs(), PROCESS_COUNT
+    )
+
+    for multiset in processParamList:
+        t = Thread(target=threadProcessAllInputs, args=[multiset, CBcaller])
+        threads.append(t)
+        t.start()
+    
+    for t in threads:
+        t.join()
 
     return 0
 
