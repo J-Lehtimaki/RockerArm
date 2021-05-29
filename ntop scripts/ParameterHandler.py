@@ -36,13 +36,13 @@ class FirstPhaseParameterHandler:
         fSorted = self.getSortedFSparams()
         cSorted = self.getSortedCCparams()
 
-        if(len(fSorted) == len(cSorted)):
-            for i in range(0, len(fSorted)-1):
-                retval.append({
-                    "CB" : fSorted[i]["CB"] + cSorted[i],
-                    "ntopcl" : fSorted[i]["ntopcl"]
-                })
-            return retval
+        assert len(fSorted) == len(cSorted), "CC & Fs size should be same"
+        for i in range(0, len(fSorted)):
+            retval.append({
+                "CB" : fSorted[i]["CB"] + cSorted[i],
+                "ntopcl" : fSorted[i]["ntopcl"]
+            })
+        return retval
 
     def getSortedChannelIDS(self):
         fSorted = self.getSortedFSparams()
@@ -75,8 +75,8 @@ class FirstPhaseParameterHandler:
         retval = []
         materialChannelsIDList = self.getCombinedMaterialChannelID()
         mergedFSandCCList = self.mergeCadConverterToFilesystem()
-        j=int(len(mergedFSandCCList)) + 1  #index materialchanlist (two materials, chanIDs ascending)
-        for i in range(0, len(mergedFSandCCList)-1):
+        j=int(len(mergedFSandCCList))  #index materialchanlist (two materials, chanIDs ascending)
+        for i in range(0, len(mergedFSandCCList)):
             retval.append({
                 "CB": mergedFSandCCList[i]["CB"] + materialChannelsIDList[i],
                 "ntopcl":{
