@@ -9,3 +9,4 @@ unittests/jsondumps/*
 
 **/AUTH.py
 
+test_CBs/*

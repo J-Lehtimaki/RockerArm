@@ -45,6 +45,7 @@ def threadProcessAllInputs(threadCustomBlockCases, CBcaller):
             CustomBlockCase["ntopcl"]["JSON_input"],
             CustomBlockCase["ntopcl"]["JSON_output"]
         )
+        print("Some Subprocess finished")
     print("Some thread finished process all inputs")
 
 def main():
