@@ -29,11 +29,14 @@ class CustomBlockLauncher:
         Arguments.append(pathJSONoutput)
         Arguments.append(ENVIRONMENT.PATH_MAIN_CB)
 
-        # First phase comment:
+        # # First phase comment:
         #   - Creating {channel_ID}_{material_ID}_input.json to correct case subfolder
         with open(pathJSONinput, 'w') as outfile:
             json.dump(blockInputs, outfile, indent=2)
 
-        sp = subprocess.Popen(Arguments, shell=True ,stdout = subprocess.PIPE, stderr= subprocess.PIPE)
-        sp.wait()
-        output, error = sp.communicate()
+        # Approach with timeout.
+        # After 2 hours custom block is propably stuck
+        try:
+            subprocess.run(Arguments, timeout=7200)
+        except subprocess.TimeoutExpired:
+            print("nTopCL subprocess ran too long. Terminated.")

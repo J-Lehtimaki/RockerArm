@@ -24,7 +24,7 @@ from ENVIRONMENT import PROCESS_COUNT
 from CB_material.ENVmaterial import MATERIAL_CHOICES
 
 import time
-from threading import Thread
+from multiprocessing import Process
 
 def initializeFirstPhase(fileHandler, paramHandler):
     fileHandler.createFileSystem()
@@ -54,7 +54,7 @@ def main():
     paramHandler = ParameterHandler()
     CBcaller = CustomBlockLauncher()
     multiProcessHelper = MultiProcessHelper()
-    threads = []    # Subprocessed managed by threads
+    processes = []
 
     # Read files and create datastructures based on **/ENV*.py settings
     initializeFirstPhase(fileHandler, paramHandler)
@@ -65,12 +65,12 @@ def main():
     )
 
     for multiset in processParamList:
-        t = Thread(target=threadProcessAllInputs, args=[multiset, CBcaller])
-        threads.append(t)
-        t.start()
+        p = Process(target=threadProcessAllInputs, args=[multiset, CBcaller])
+        processes.append(p)
+        p.start()
     
-    for t in threads:
-        t.join()
+    for p in processes:
+        p.join()
 
     return 0
 
