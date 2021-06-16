@@ -21,7 +21,7 @@ from ParameterHandler import FirstPhaseParameterHandler as ParameterHandler
 from MultiProcessHelper import MultiProcessHelper
 
 from ENVIRONMENT import PROCESS_COUNT
-from CB_material.ENVmaterial import MATERIAL_CHOICES
+from CB_material.ENVmaterial import MATERIAL_CHOICES    # 16.6.2021 CB_Main 2_0_7 with only 316L
 
 import time
 from multiprocessing import Process
